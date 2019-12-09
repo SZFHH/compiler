@@ -1,0 +1,29 @@
+PoundSign   include   Less   stdio   Point   h   More   
+INT   main   Lbracket   Rbracket   
+Left_Big_Brace   
+INT   x   Comma   m   Comma   n   Comma   i   Comma   sum   Is   0   Semicolon   
+scanf   Lbracket   "%d%d%d"   Comma   Address_Operator   x   Comma   Address_Operator   m   Comma   Address_Operator   n   Rbracket   Semicolon   
+sum   Is   sum   Plus   x   Semicolon   
+FOR   Lbracket   i   Is   1   Semicolon   i   Less   n   Semicolon   i   Double_Plus   Rbracket   
+Left_Big_Brace   
+x   Is   x   Plus   m   Semicolon   
+sum   Is   sum   Plus   x   Semicolon   
+Right_Big_Brace   
+printf   Lbracket   "%d"   Comma   sum   Rbracket   Semicolon   
+RETURN   0   Semicolon   
+Right_Big_Brace   
+----------------------------
+OPRT   IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   
+RESERVE   IDENT   OPRT   OPRT   
+OPRT   
+RESERVE   IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   NUM   OPRT   
+IDENT   OPRT   STRING   OPRT   OPRT   IDENT   OPRT   OPRT   IDENT   OPRT   OPRT   IDENT   OPRT   OPRT   
+IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   
+RESERVE   OPRT   IDENT   OPRT   NUM   OPRT   IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   OPRT   
+OPRT   
+IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   
+IDENT   OPRT   IDENT   OPRT   IDENT   OPRT   
+OPRT   
+IDENT   OPRT   STRING   OPRT   IDENT   OPRT   OPRT   
+RESERVE   NUM   OPRT   
+OPRT   

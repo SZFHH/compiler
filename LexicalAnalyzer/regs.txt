@@ -34,6 +34,7 @@ FLOAT:float
 FOR:for
 CHAR:char
 SWITCH:switch
+RETURN:return
 CASE:case
 IF:if
 ELSE:else
