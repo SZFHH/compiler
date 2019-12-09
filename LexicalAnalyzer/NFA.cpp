@@ -1,8 +1,14 @@
 #include "NFA.h"
-
+/*正则树转NFA*/
 void NFA::RE_to_NFA()
 {
 	Thompson(regtree.getroot());
+	//把所有的edge存入alledge，供DFA中的操作使用
+	for (auto &node : allnodes) {
+		for (auto &edge : node.edges) {
+			alledges.insert({ edge.c, &edge });
+		}
+	}
 }
 
 int NFA::getStart()
@@ -13,6 +19,11 @@ int NFA::getStart()
 int NFA::getAccept()
 {
 	return accept;
+}
+
+std::set<char> NFA::getalphabets()
+{
+	return regtree.alphabets;
 }
 
 int NFA::NewNode()
@@ -95,12 +106,16 @@ NFA::NFA(const std::string & reg):regtree(reg)
 	RE_to_NFA();
 }
 
+NFA::NFA()
+{
+}
+
 std::vector<NFANode>& NFA::getallnodes()
 {
 	return allnodes;
 }
 
-multimap<char, NFAedge*>& NFA::getalledges()
+std::multimap<char, NFAedge*>& NFA::getalledges()
 {
 	return alledges;
 }

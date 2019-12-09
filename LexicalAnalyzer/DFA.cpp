@@ -15,7 +15,7 @@ std::set<int> DFA::delta(const std::set<int>& st, char c)
 std::set<int> DFA::closure(const std::set<int>& st)
 {
 	std::set<int> rv;
-	queue<int> q;
+	std::queue<int> q;
 	auto &allnfanodes = nfa.getallnodes();
 	for (auto &e : st) {
 		q.push(e);
@@ -55,7 +55,7 @@ void DFA::addedge(const std::set<int>& from, const std::set<int>& to, char c)
 void DFA::SubsetConstruct()
 {
 	std::set<int> from, to;
-	std::queue<std::set<int>> worklist;
+	std::queue<std::set<int>> worklist; //工作区，存储第一次出现的点集
 	worklist.push(closure({ nfa.getStart() }));
 	while (!worklist.empty()) {
 		from = worklist.front();
@@ -65,6 +65,7 @@ void DFA::SubsetConstruct()
 			if (to.empty()) continue;
 			to = closure(to);
 			addedge(from, to, c);
+			//如果加入了新的点，把新的点加入worklist（除了第一次会新建from，之后只可能新建to）
 			if (addnewnode) {
 				worklist.push(to);
 				addnewnode = false;
@@ -76,6 +77,7 @@ void DFA::SubsetConstruct()
 void DFA::NFA_to_DFA()
 {
 	SubsetConstruct();
+	//存边，供MDFA使用
 	for (auto &node : allnodes) {
 		for (auto &edge : node.edges) {
 			alledges.insert({ edge.c, &edge });
@@ -83,10 +85,15 @@ void DFA::NFA_to_DFA()
 	}
 }
 
-DFA::DFA(const string & reg):nfa(reg)
+DFA::DFA(const std::string & reg):nfa(reg)
 {
 	addnewnode = false;
+	alphabets = nfa.getalphabets();
 	NFA_to_DFA();
+}
+
+DFA::DFA()
+{
 }
 
 std::vector<DFANode>& DFA::getallnodes()
@@ -94,7 +101,7 @@ std::vector<DFANode>& DFA::getallnodes()
 	return allnodes;
 }
 
-multimap<char, DFAedge*>& DFA::getalledges()
+std::multimap<char, DFAedge*>& DFA::getalledges()
 {
 	return alledges;
 }

@@ -1,9 +1,9 @@
 #include "MDFA.h"
 
-pair<set<int>, set<int>> MDFA::split(std::set<std::set<int>>::iterator s_it)
+std::pair<std::set<int>, std::set<int>> MDFA::split(std::set<std::set<int>>::iterator s_it)
 {
-	set<int> rv;
-	set<int> rv2 = *s_it;
+	std::set<int> rv;
+	std::set<int> rv2 = *s_it;
 	std::set<std::set<int>>::iterator last = P.end();
 	auto &alledges = dfa.getalledges();
 	for (char c : alphabets) {
@@ -23,6 +23,7 @@ pair<set<int>, set<int>> MDFA::split(std::set<std::set<int>>::iterator s_it)
 				}
 			}
 		}
+		//通过以c为字符的边，一个集合中的所有点指向自身，或者指向同一个另外的集合，就不用分割。
 		if (!rv.empty() && rv.size() != s_it->size()) {
 			addnewset = true;
 			for (auto &d : rv) rv2.erase(d);
@@ -30,13 +31,13 @@ pair<set<int>, set<int>> MDFA::split(std::set<std::set<int>>::iterator s_it)
 		}
 		else rv.clear();
 	}
-	return make_pair(rv, rv2);
+	return std::make_pair(rv, rv2);
 }
 
 void MDFA::hopcroft()
 {
-	set<int> ac, notac;
-	pair<set<int>, set<int>> temp;
+	std::set<int> ac, notac;
+	std::pair<std::set<int>, std::set<int>> temp;
 	auto &alldfanodes = dfa.getallnodes();
 	for (auto &node : alldfanodes) {
 		if (node.accept) ac.insert(node.num);
@@ -44,7 +45,7 @@ void MDFA::hopcroft()
 	}
 	K.insert(ac);
 	K.insert(notac);
-
+	//最初把所有点按接受和不接受分成两个集合，K为输出集合，P为临时集合
 	do{
 		P = K;
 		K.clear();
@@ -89,29 +90,43 @@ void MDFA::minimize()
 {
 	hopcroft();
 	int i = 0;
+	//按分好的集合建点
 	for (auto &vset : K) {
 		nodes.push_back(MDFANode(isaccept(vset), i, vset));
 		++i;
 	}
+	//按DFA的连接关系连接MDFA的点
 	auto &alledges = dfa.getalledges();
-	for (char c : alphabets) {
-		auto pairit = alledges.equal_range(c);
-		auto startit = pairit.first;
-		auto endit = pairit.second;
-		for (auto it = startit; it != endit; ++it) {
-			addedge(it->second->from, it->second->to, c);
+	for (auto &edge:alledges) {
+		addedge(edge.second->from, edge.second->to, edge.first);
+	}
+	//找到MDFA中的起始结点
+	for (int i = 0; i < nodes.size(); ++i) {
+		if (nodes[i].vertex.find(0) != nodes[i].vertex.end()) {
+			start = i;
+			break;
 		}
 	}
 
 }
 
-MDFA::MDFA(const string & reg):dfa(reg)
+MDFA::MDFA(const std::string & reg):dfa(reg)
 {
 	addnewset = false;
+	alphabets = dfa.alphabets;
 	minimize();
 }
 
-vector<MDFANode>& MDFA::get_nodes()
+MDFA::MDFA()
+{
+}
+
+std::vector<MDFANode>& MDFA::get_nodes()
 {
 	return nodes;
+}
+
+int MDFA::getstart()
+{
+	return start;
 }

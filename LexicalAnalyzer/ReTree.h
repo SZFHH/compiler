@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
-using namespace std;
+#include<set>
+//结点种类
 enum Nodekind{
 	ELEMENT, //字符
 	CONCAT,  //连接
@@ -9,6 +10,7 @@ enum Nodekind{
 	ZORONE   //？
 }; 
 const int EPS = -2;
+
 struct ReTreeNode {
 	Nodekind kind;
 	char c;
@@ -22,18 +24,21 @@ struct ReTreeNode {
 
 class ReTree {
 
-	string reg;
+	std::string reg; //正则表达式
 	ReTreeNode* root;
 	int pos;
-	char curc;
-	char getnext();
+	char currentChar;
+	char getnextChar();
+	void update(); //预处理正则表达式的语法糖
+	/*利用递归处理正则表达式，建立正则树*/
 	ReTreeNode* parse(); //处理|
 	ReTreeNode* parse_A(); //处理与
 	ReTreeNode* parse_B(); //处理*或者？
 	ReTreeNode* parse_C(); //处理元素
-	bool iselement();
-
+	void RE2tree();
 public:
-	ReTree(const string &s);
+	std::set<char> alphabets; //正则表达式中出现的字符
+	ReTree(const std::string &s);
+	ReTree();
 	ReTreeNode* getroot();
 };

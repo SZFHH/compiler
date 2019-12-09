@@ -7,6 +7,7 @@ Preprocess::Preprocess()
 {
 	is_block_comment = false;
 }
+/*去除注释*/
 void Preprocess::trim(std::string & s)
 {
 	int it, it2;
@@ -18,9 +19,9 @@ void Preprocess::trim(std::string & s)
 			is_block_comment = false;
 		}
 	}
-	it = s.find("////", 0);
+	it = s.find("//", 0);
 	if (it != s.npos) s.erase(s.begin() + it, s.end());
-	it = s.find("//*", 0);
+	it = s.find("/*", 0);
 	if (it != s.npos) {
 		it2 = s.find("*/", 0);
 		if (it2 != s.npos) {
@@ -34,11 +35,12 @@ void Preprocess::trim(std::string & s)
 }
 void Preprocess::read_codefile(std::string filename)
 {
+	is_block_comment = false;
 	std::string temp;
 	code_filename = filename;
-	ifstream in(code_filename);
+	std::ifstream in(code_filename);
 	if (!in.is_open()) {
-		cout << "未成功打开code文件" << endl;
+		std::cout << "未成功打开code文件" << std::endl;
 		return;
 	}
 	while (getline(in, temp)) {
@@ -53,9 +55,9 @@ void Preprocess::read_regsfile(std::string filename)
 	std::string curkind;
 	std::string name, reg;
 	regs_filename = filename;
-	ifstream in(regs_filename);
+	std::ifstream in(regs_filename);
 	if (!in.is_open()){
-		cout << "未成功打开regs文件" << endl;
+		std::cout << "未成功打开regs文件" << std::endl;
 		return;
 	}
 	while (getline(in, temp)) {
@@ -76,4 +78,9 @@ void Preprocess::read_regsfile(std::string filename)
 void Preprocess::buildLA(LexicalAnalyzer & LA)
 {
 	LA.build(regs, opes, reserved_words);
+}
+
+std::vector<std::string>& Preprocess::get_code_file()
+{
+	return lines;
 }
